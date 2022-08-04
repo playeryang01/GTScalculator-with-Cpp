@@ -3,22 +3,55 @@
 #include<string>
 #include<stdlib.h>
 #include<windows.h>
+#include<map>
+
 using namespace std;
+
+long double x,low_height,getten_height,observer_x=1.0,observer_height;
+string getten_dw,start="0";
+int bug=0;
+bool did_input=true;
+
+typedef void (*pFunc)();
+std::map<std::string, pFunc> strFuncMap;
+
 void head_tell() {
-	cout<<"巨大娘计算器 V0.1"<<endl<<"            by playeryang01"<<endl<<endl<<"made with C++"<<endl<<endl<<endl;
+	system("cls");
+	cout<<"巨大娘计算器 V0.2"<<endl<<"            by playeryang01"<<endl<<endl<<"made with C++"<<endl<<endl<<endl;
 	return;
 }
+
+void show_loading(int time) {
+	system("cls");
+	head_tell();
+	cout<<"loading...";
+	Sleep(time);
+	system("cls");
+	return;
+}
+
+void show_loading() {
+	system("cls");
+	head_tell();
+	cout<<"loading...";
+	Sleep(1000);
+	system("cls");
+	return;
+}
+
 void height() {
 	head_tell();
-	long double lady_height,gts_height,x;
+	long double gts_height;
 	int num_hdw=0;
 	char end='n';
 	string hdw="米";
-	cout<<"原高(单位：米):";
-	cin>>lady_height;
-	cout<<endl<<"倍率:";
-	cin>>x;
-	gts_height=lady_height*x;
+	if(did_input==false){
+		cout<<"请输入巨大娘的原高:";
+		cin>>low_height;
+		cout<<endl<<"请输入放大的倍数:";
+		cin>>x;
+	}
+	gts_height=low_height*x;
 	if(gts_height>=1) {
 		if(gts_height>=1000) {
 			gts_height/=1000.0;
@@ -29,15 +62,15 @@ void height() {
 			num_hdw++;
 		}
 	} else {
-		if(gts_height<=1) {
+		if(gts_height<1) {
 			gts_height*=100.0;
 			num_hdw--;
 		}
-		if(gts_height<=1) {
+		if(gts_height<1) {
 			gts_height*=10.0;
 			num_hdw--;
 		}
-		while(gts_height<=1&&num_hdw>-4) {
+		while(gts_height<1&&num_hdw>-4) {
 			gts_height*=1000.0;
 			num_hdw--;
 		}
@@ -60,37 +93,399 @@ void height() {
 		hdw="纳米";
 	}
 	cout<<endl<<"改变后高："<<gts_height<<" "<<hdw<<endl<<endl;
-	cout<<"计算结束，是否退出(y/n)？";
+	if(did_input==false){
+		low_height=0;
+		x=0;
+	}
+	cout<<"计算结束，是否需要再次计算(y/n)？";
 	cin>>end;
-	if(end=='y') {
+	if(end=='n') {
 		return;
 	} else {
 		cout<<endl<<"程序再次执行中..."<<endl<<endl;
-		Sleep(500);
+		Sleep(50);
 		system("cls");
+		show_loading(200);
 		height();
 	}
-
 	return;
 }
-int main() {
-	while(true) {
-		cout<<"loading...";
-		Sleep(1000);
+
+void height_with_obs(){
+	head_tell();
+	long double gts_height;
+	int num_hdw=0;
+	char end='n';
+	string hdw="米";
+	if(did_input==false){
+		cout<<"请输入巨大娘的原高:";
+		cin>>low_height;
+		cout<<endl<<"请输入放大的倍数:";
+		cin>>x;
+	}
+	gts_height=low_height*x/observer_x;
+	if(gts_height>=1) {
+		if(gts_height>=1000) {
+			gts_height/=1000.0;
+			num_hdw++;
+		}
+		while(gts_height>=10000&&num_hdw<=4) {
+			gts_height/=10000.0;
+			num_hdw++;
+		}
+	} else {
+		if(gts_height<1) {
+			gts_height*=100.0;
+			num_hdw--;
+		}
+		if(gts_height<1) {
+			gts_height*=10.0;
+			num_hdw--;
+		}
+		while(gts_height<1&&num_hdw>=-4) {
+			gts_height*=1000.0;
+			num_hdw--;
+		}
+	}
+	if(num_hdw==1) {
+		hdw="公里";
+	} else if(num_hdw==2) {
+		hdw="万公里";
+	} else if(num_hdw==3) {
+		hdw="亿公里";
+	} else if(num_hdw==4) {
+		hdw="兆公里";
+	} else if(num_hdw==-1) {
+		hdw="厘米";
+	} else if(num_hdw==-2) {
+		hdw="毫米";
+	} else if(num_hdw==-3) {
+		hdw="微米";
+	} else if(num_hdw==-4) {
+		hdw="纳米";
+	}
+	cout<<endl<<"改变后高："<<gts_height<<" "<<hdw<<endl<<endl;
+	if(did_input==false){
+		low_height=0;
+		x=0;
+	}
+	cout<<"计算结束，是否需要再次计算(y/n)？";
+	cin>>end;
+	if(end=='n') {
+		return;
+	} else {
+		cout<<endl<<"程序再次执行中..."<<endl<<endl;
+		Sleep(50);
 		system("cls");
+		show_loading(200);
+		height();
+	}
+	return;
+}
+
+void get_height_and_dw(double low_height,double x){
+	getten_height=0;
+	getten_dw="米";
+	long double gts_height;
+	int num_hdw=0;
+	char end='n';
+	string hdw="米";
+	gts_height=low_height*x;
+	if(gts_height>=1) {
+		if(gts_height>=1000) {
+			gts_height/=1000.0;
+			num_hdw++;
+		}
+		while(gts_height>=10000&&num_hdw<4) {
+			gts_height/=10000.0;
+			num_hdw++;
+		}
+	} else {
+		if(gts_height<1) {
+			gts_height*=100.0;
+			num_hdw--;
+		}
+		if(gts_height<1) {
+			gts_height*=10.0;
+			num_hdw--;
+		}
+		while(gts_height<1&&num_hdw>-4) {
+			gts_height*=1000.0;
+			num_hdw--;
+		}
+	}
+	if(num_hdw==1) {
+		hdw="公里";
+	} else if(num_hdw==2) {
+		hdw="万公里";
+	} else if(num_hdw==3) {
+		hdw="亿公里";
+	} else if(num_hdw==4) {
+		hdw="兆公里";
+	} else if(num_hdw==-1) {
+		hdw="厘米";
+	} else if(num_hdw==-2) {
+		hdw="毫米";
+	} else if(num_hdw==-3) {
+		hdw="微米";
+	} else if(num_hdw==-4) {
+		hdw="纳米";
+	}
+	getten_height=gts_height;
+	getten_dw=hdw;
+	return;
+} 
+
+void lenth_in_gts_eye() {
+	head_tell();
+	double lenth;
+	string ldw="米";
+	char end;
+	int num_ldw,true_num_ldw;
+	if(did_input==false){
+		cout<<"请输入巨大娘的原高:";
+		cin>>low_height;
+		cout<<endl<<"请输入放大的倍数:";
+		cin>>x;
+	}
+	cout<<"请选择长度单位:"<<endl<<endl<<"1 纳米"<<endl<<endl<<"2 微米"<<endl<<endl<<"3 毫米"<<endl<<endl<<"4 厘米"<<endl<<endl<<"5 米"<<endl<<endl<<"6 公里"<<endl<<endl<<"7 万公里"<<endl<<endl<<"8 亿公里"<<endl<<endl<<"9 兆公里"<<endl<<endl<<endl;
+	cout<<"您的选择是：";
+	cin>>num_ldw;
+	cout<<endl<<"请输入长度:";
+	cin>>lenth;
+	lenth/=x;
+	if(lenth<1) {
+		while(lenth<1) {
+			if(num_ldw>=7) {
+				lenth*=10000;
+			} else if(num_ldw==2||num_ldw==3||num_ldw==6) {
+				lenth*=1000;
+			} else if(num_ldw==5) {
+				lenth*=100;
+			} else if(num_ldw==4) {
+				lenth*=10;
+			} else if(num_ldw==1) {
+				break;
+			}
+			num_ldw--;
+		}
+	} else {
+		while(lenth>=1) {
+			if(lenth>=10000&&num_ldw>=6&&num_ldw!=9) {
+				lenth/=10000;
+				num_ldw++;
+				continue;
+			} else if(lenth>=1000&&(num_ldw==1||num_ldw==2||num_ldw==5)) {
+				lenth/=1000;
+				num_ldw++;
+				continue;
+			} else if(lenth>=100&&num_ldw==4) {
+				lenth/=100;
+				num_ldw++;
+				continue;
+			} else if(lenth>=10&&num_ldw==3) {
+				lenth/=10;
+				num_ldw++;
+				continue;
+			} 
+			break;
+			
+		}
+	}
+	if(num_ldw==5) {
+		ldw="米";
+	} else if(num_ldw==6) {
+		ldw="公里";
+	} else if(num_ldw==7) {
+		ldw="万公里";
+	} else if(num_ldw==8) {
+		ldw="亿公里";
+	} else if(num_ldw==9) {
+		ldw="兆公里";
+	} else if(num_ldw==4) {
+		ldw="厘米";
+	} else if(num_ldw==3) {
+		ldw="毫米";
+	} else if(num_ldw==2) {
+		ldw="微米";
+	} else if(num_ldw==1) {
+		ldw="纳米";
+	}
+	cout<<endl<<"这个长度在她眼中的长度为："<<lenth<<" "<<ldw<<endl<<endl;
+	if(did_input==false){
+		low_height=0;
+		x=0;
+	}
+	cout<<"计算结束，是否需要再次计算(y/n)？";
+	cin>>end;
+	if(end=='n') {
+		return;
+	} else {
+		cout<<endl<<"程序再次执行中..."<<endl<<endl;
+		Sleep(50);
+		system("cls");
+		show_loading(200);
+		lenth_in_gts_eye();
+	}
+	return;
+}
+
+void input_observer(){
+input_again:
+	head_tell();
+	cout<<"请输入\"观察者\"的原高(单位：米):";
+	cin>>observer_height;
+	if(observer_height>=4){
+		cout<<endl<<"不要太过离谱哦！"<<endl;
+		system("pause");
+		system("cls");
+		goto input_again;
+	}
+	if(true==false){
+	input_again_1:
 		head_tell();
-		int start;
-		cout<<"1 计算巨大娘身高"<<endl<<endl<<"0 退出"<<endl<<endl<<"其他功能开发中..."<<endl<<endl;
+	}
+	cout<<endl<<"请输入放大/缩小的倍数:";
+	cin>>observer_x;
+	if(observer_x==0){
+		cout<<endl<<"不要输入0倍哦！"<<endl;
+		system("pause");
+		system("cls");
+		goto input_again_1;
+	}
+	return;
+}
+
+void blue_screen(){
+	show_loading(5000);
+	system("color 17");
+	cout<<"A problem has been detected and windows has been shut down to prevent damage to your computer ."<<endl<<endl;
+	cout<<"If this is the first time you've seen this stop error screen,restart your computer. If this screen appears again, fo11ow these steps :"<<endl<<endl;
+	cout<<"Check to be sure you have adequate disk space, If a driver is identified in the stop message, disable the driver or check with the manufacturer for driver updates.Try changing video adapters."<<endl<<endl;
+	cout<<"Check with your hardware vendor for any BlOS updates. Disab1e BIOS memory options such as caching or shadowing. If you needto use safe Mode to remove or disab1e components,restart your computer,press F8 to select Advanced startup options,and then select safe Mode."<<endl<<endl;
+	cout<<"Technical information:"<<endl<<endl;
+	cout<<"\"\"\" STOP:0x00114514"<<endl<<endl;
+	cout<<"Beginning dump of physical memory"<<endl<<endl;
+	cout<<"Physical memory dump Complete."<<endl<<endl;
+	cout<<"Contact your system administrator or technical support group for further assistance."<<endl<<endl;
+}
+
+void buildDebugMap()
+{ 
+	strFuncMap["head_tell"] = &head_tell; 
+	strFuncMap["show_loading"] = &show_loading;
+	strFuncMap["height"] = &height; 
+	strFuncMap["lenth_in_gts_eye"] = &lenth_in_gts_eye; 
+	strFuncMap["blue_screen"] = &blue_screen; 
+	strFuncMap["buildDebugMap"] = &buildDebugMap;
+	strFuncMap["input_observer"] = &input_observer;
+}
+ 
+void callFunc(const std::string& str) 
+{ 
+	if(strFuncMap.count(str))
+		(*strFuncMap[str])();
+	else
+		std::cout << "unsupported function str : " << std::endl;
+}
+
+void debug_mode(){
+	system("cls");
+	system("color 40");
+	buildDebugMap();
+	cout<<"欢迎进入debug模式，在此你可以调用该程序里的任意函数。"<<endl;
+	string function;
+	while(1){
+		cin>>function;
+		callFunc(function);
+		if(function=="exit"){
+			break;
+		}else if(function=="cls"){
+			system("cls");
+			cout<<"欢迎进入debug模式，在此你可以调用该程序里的任意函数。"<<endl;
+		}
+		if(function=="blue_screen"){
+			Sleep(1000);
+			system("cls");
+			system("color 40");
+			cout<<"欢迎进入debug模式，在此你可以调用该程序里的任意函数。"<<endl;
+		} 
+	}
+	
+} 
+
+int main() {
+	show_loading(1000);
+input_again:
+	head_tell();
+	Sleep(0);
+	cout<<"您可以输入您的巨大娘的原身高(单位：m)以及其所放大/缩小的倍数。"<<endl<<"您也可以输入'0'来取消您的输入，不过在您使用相关数据时会重新让您输入。"<<endl<<endl;
+	cout<<"原高：";
+	cin>>low_height;
+	if(low_height==0){
+		goto no_input;
+	}else if(low_height>=4){
+		cout<<endl<<"不要太过离谱哦！"<<endl;
+		system("pause");
+		goto input_again;
+	}
+	if(true==false){
+	input_again_1:
+		head_tell();
+	}
+	cout<<endl<<"放大倍数：";
+	cin>>x; 
+	if(x==0){
+		cout<<endl<<"不要输入0倍哦！"<<endl;
+		system("pause");
+		system("cls");
+		goto input_again_1;
+	}
+	did_input=true; 
+	if(true==false){
+	no_input:
+		did_input=false;
+	}
+	show_loading(500);
+	while(true) {
+		head_tell();
+		cout<<"1 计算巨大娘身高"<<endl<<endl<<"2 计算\"观察者\"眼中巨大娘的身高"<<endl<<endl<<"3 计算一般长度在巨大娘眼中的长度"<<endl<<endl<<"8 设置\"观察者\"的大小"<<endl<<endl<<"9 重新输入倍率及原高"<<endl<<endl<<"0 退出"<<endl<<endl<<"其他功能开发中..."<<endl<<endl;
 		cout<<"您的选择是:";
 		cin>>start;
-		if(start==1) {
-			cout<<endl<<"loading...";
-			Sleep(500);
-			system("cls");
+		if(start=="1") {
+			show_loading(500);
 			height();
-		}else if(start==0){
+		}else if(start=="2"){
+			show_loading(500);
+			height_with_obs();
+		}else if (start=="3") {
+			show_loading(500);
+			lenth_in_gts_eye();
+		}else if(start=="8"){
+			show_loading(500);
+			input_observer();
+		}else if(start=="9"){
+			show_loading(500);
+			goto input_again;
+		}else if(start=="0") {
 			break;
+		}else if(start=="debug"){
+			debug_mode();
+			system("color 07");
+		}else{
+			if(bug==99){
+				show_loading(500);
+				head_tell();
+				cout<<"哦不！您输入了过多的错误！我猜这个程序可能会出些问题。";
+				blue_screen();
+			}
+			show_loading(500);
+			head_tell();
+			cout<<"此功能还未开发或您输入错误，您可以重新输入。" <<endl<<endl;
+			bug++; 
+			system("pause");
 		}
+		show_loading(300);
 	}
 	return 0;
 }
