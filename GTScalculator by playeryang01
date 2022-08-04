@@ -1,0 +1,96 @@
+#include<iostream>
+#include<cstring>
+#include<string>
+#include<stdlib.h>
+#include<windows.h>
+using namespace std;
+void head_tell() {
+	cout<<"巨大娘计算器 V0.1"<<endl<<"            by playeryang01"<<endl<<endl<<"made with C++"<<endl<<endl<<endl;
+	return;
+}
+void height() {
+	head_tell();
+	long double lady_height,gts_height,x;
+	int num_hdw=0;
+	char end='n';
+	string hdw="米";
+	cout<<"原高(单位：米):";
+	cin>>lady_height;
+	cout<<endl<<"倍率:";
+	cin>>x;
+	gts_height=lady_height*x;
+	if(gts_height>=1) {
+		if(gts_height>=1000) {
+			gts_height/=1000.0;
+			num_hdw++;
+		}
+		while(gts_height>=10000&&num_hdw<4) {
+			gts_height/=10000.0;
+			num_hdw++;
+		}
+	} else {
+		if(gts_height<=1) {
+			gts_height*=100.0;
+			num_hdw--;
+		}
+		if(gts_height<=1) {
+			gts_height*=10.0;
+			num_hdw--;
+		}
+		while(gts_height<=1&&num_hdw>-4) {
+			gts_height*=1000.0;
+			num_hdw--;
+		}
+	}
+	if(num_hdw==1) {
+		hdw="公里";
+	} else if(num_hdw==2) {
+		hdw="万公里";
+	} else if(num_hdw==3) {
+		hdw="亿公里";
+	} else if(num_hdw==4) {
+		hdw="兆公里";
+	} else if(num_hdw==-1) {
+		hdw="厘米";
+	} else if(num_hdw==-2) {
+		hdw="毫米";
+	} else if(num_hdw==-3) {
+		hdw="微米";
+	} else if(num_hdw==-4) {
+		hdw="纳米";
+	}
+	cout<<endl<<"改变后高："<<gts_height<<" "<<hdw<<endl<<endl;
+	cout<<"计算结束，是否退出(y/n)？";
+	cin>>end;
+	if(end=='y') {
+		return;
+	} else {
+		cout<<endl<<"程序再次执行中..."<<endl<<endl;
+		Sleep(500);
+		system("cls");
+		height();
+	}
+
+	return;
+}
+int main() {
+	while(true) {
+		cout<<"loading...";
+		Sleep(1000);
+		system("cls");
+		head_tell();
+		int start;
+		cout<<"1 计算巨大娘身高"<<endl<<endl<<"0 退出"<<endl<<endl<<"其他功能开发中..."<<endl<<endl;
+		cout<<"您的选择是:";
+		cin>>start;
+		if(start==1) {
+			cout<<endl<<"loading...";
+			Sleep(500);
+			system("cls");
+			height();
+		}else if(start==0){
+			break;
+		}
+	}
+	return 0;
+}
